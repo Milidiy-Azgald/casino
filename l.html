@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Налаштування ймовірностей</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #111;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    table {
+      margin: 0 auto;
+      border-collapse: collapse;
+    }
+    td, th {
+      padding: 10px;
+      border: 1px solid white;
+    }
+    input[type=number] {
+      width: 60px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 20px;
+      background-color: gold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    a {
+      color: #0ff;
+      display: block;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+<h1>Налаштування ймовірностей символів</h1>
+<form id="probForm">
+  <table>
+    <tr><th>Символ</th><th>Ймовірність (%)</th></tr>
+    <tr><td>🍒</td><td><input type="number" name="🍒" min="0" max="100" value="20"></td></tr>
+    <tr><td>🍋</td><td><input type="number" name="🍋" min="0" max="100" value="20"></td></tr>
+    <tr><td>🔔</td><td><input type="number" name="🔔" min="0" max="100" value="15"></td></tr>
+    <tr><td>🍉</td><td><input type="number" name="🍉" min="0" max="100" value="15"></td></tr>
+    <tr><td>💎</td><td><input type="number" name="💎" min="0" max="100" value="20"></td></tr>
+    <tr><td>7️⃣</td><td><input type="number" name="7️⃣" min="0" max="100" value="10"></td></tr>
+  </table>
+  <button type="submit">Зберегти</button>
+</form>
+<p id="status"></p>
+<a href="index.html">⬅️ Назад до гри</a>
+
+<script>
+  document.getElementById('probForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const probs = {};
+    let total = 0;
+    for (const [symbol, value] of formData.entries()) {
+      const num = parseInt(value);
+      if (isNaN(num) || num < 0) return alert(\"Некоректне значення\");
+      probs[symbol] = num;
+      total += num;
+    }
+
+    if (total !== 100) {
+      alert(\"Сума ймовірностей повинна дорівнювати 100%!\");
+      return;
+    }
+
+    localStorage.setItem('slotProbabilities', JSON.stringify(probs));
+    document.getElementById('status').textContent = \"✅ Ймовірності збережено!\";
+  });
+</script>
+</body>
+</html>
