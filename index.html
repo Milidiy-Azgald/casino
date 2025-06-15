@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Казино Слот</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #111;
+      color: white;
+      padding-top: 50px;
+    }
+    .slot {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 30px 0;
+    }
+    .reel {
+      width: 100px;
+      height: 100px;
+      font-size: 50px;
+      background: #222;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #000;
+      animation: spin 0.6s ease-in-out;
+    }
+    @keyframes spin {
+      0% { transform: scale(1) rotateX(0deg); opacity: 1; }
+      25% { transform: scale(1.2) rotateX(180deg); opacity: 0.5; }
+      50% { transform: scale(1) rotateX(360deg); opacity: 1; }
+      100% { transform: scale(1) rotateX(360deg); opacity: 1; }
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: none;
+    }
+    button {
+      background-color: gold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<h1>Казино Слот</h1>
+<p>Введіть ставку:</p>
+<input type="number" id="bet" min="1" value="10">
+<br>
+<button onclick="spin()">Спін</button>
+<div class="slot">
+  <div class="reel" id="reel1">🍒</div>
+  <div class="reel" id="reel2">🍒</div>
+  <div class="reel" id="reel3">🍒</div>
+</div>
+<h2 id="result"></h2>
+
+<script>
+  const defaultProbs = {
+    '🍒': 20,
+    '🍋': 20,
+    '🔔': 15,
+    '🍉': 15,
+    '💎': 20,
+    '7️⃣': 10
+  };
+
+  function getProbabilities() {
+    const saved = localStorage.getItem('slotProbabilities');
+    try {
+      const parsed = JSON.parse(saved);
+      if (parsed && typeof parsed === 'object') return parsed;
+    } catch {}
+    return defaultProbs;
+  }
+
+  function getRandomSymbol() {
+    const probs = getProbabilities();
+    const symbols = Object.keys(probs);
+    const rand = Math.random() * 100;
+    let cumulative = 0;
+    for (let symbol of symbols) {
+      cumulative += probs[symbol];
+      if (rand < cumulative) return symbol;
+    }
+    return symbols[symbols.length - 1];
+  }
+
+  function spin() {
+    const bet = parseInt(document.getElementById("bet").value);
+    if (isNaN(bet) || bet <= 0) {
+      alert("Введіть дійсну ставку");
+      return;
+    }
+
+    const r1 = getRandomSymbol();
+    const r2 = getRandomSymbol();
+    const r3 = getRandomSymbol();
+
+    const reel1 = document.getElementById("reel1");
+    const reel2 = document.getElementById("reel2");
+    const reel3 = document.getElementById("reel3");
+
+    [reel1, reel2, reel3].forEach(reel => {
+      reel.style.animation = "none";
+      void reel.offsetWidth;
+      reel.style.animation = "spin 0.6s ease-in-out";
+    });
+
+    setTimeout(() => {
+      reel1.textContent = r1;
+      reel2.textContent = r2;
+      reel3.textContent = r3;
+
+      const result = document.getElementById("result");
+      if (r1 === r2 && r2 === r3) {
+        result.textContent = `Виграш! Ваш виграш: ${bet * 5} кредитів!`;
+      } else {
+        result.textContent = "Не пощастило :( Спробуй ще!";
+      }
+    }, 600);
+  }
+</script>
+</body>
+</html>
