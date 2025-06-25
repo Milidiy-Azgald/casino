@@ -49,11 +49,11 @@
   </style>
 </head>
 <body>
-<h1>Казино Слот</h1>
-<p>Введіть ставку:</p>
+<h1>Casino-Slot</h1>
+<p>Geben Sie Ihren Einsatz ein:</p>
 <input type="number" id="bet" min="1" value="10">
 <br>
-<button onclick="spin()">Спін</button>
+<button onclick="spin()">Drehen</button>
 <div class="slot">
   <div class="reel" id="reel1">🍒</div>
   <div class="reel" id="reel2">🍒</div>
@@ -120,9 +120,9 @@
 
       const result = document.getElementById("result");
       if (r1 === r2 && r2 === r3) {
-        result.textContent = `Виграш! Ваш виграш: ${bet * 5} кредитів!`;
+        result.textContent = `Gewinnen Sie! Ihr Gewinn: ${bet * 5} Credits!`;
       } else {
-        result.textContent = "Не пощастило :( Спробуй ще!";
+        result.textContent = "Kein Glück :( Versuchen Sie es erneut!";
       }
     }, 600);
   }
